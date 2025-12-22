@@ -5,7 +5,16 @@
     {
         <small class="navbar-text">
             <b>@Localizer["YourCart"]:</b>
-            @Model.Lines.Sum(x => x.Quantity) item(s)
+            @{
+                int totalItems = Model.Lines.Sum(x => x.Quantity);
+                var label = Localizer["Item"];
+
+                if (totalItems > 1)
+                {
+                    label = Localizer["Items"];
+                }
+            }
+            @totalItems @label
             @Model.GetTotalValue().ToString("c")
         </small>
     }

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Item" xml:space="preserve">
+    <value>article</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>articles</value>
+  </data>
   <data name="YourCart" xml:space="preserve">
     <value>Votre panier</value>
   </data>
