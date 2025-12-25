@@ -15,28 +15,37 @@ namespace P3AddNewFunctionalityDotNetCore.Models
 
         public void AddItem(Product product, int quantity)
         {
+            if (product.Quantity == 0) return;
+
             CartLine line = _cartLines.FirstOrDefault(p => p.Product.Id == product.Id);
+            int quantityToAdd = QuantityProductToAdd(product.Quantity, quantity);
 
             if (line == null)
             {
-                _cartLines.Add(new CartLine { Product = product, Quantity = quantity });
+                _cartLines.Add(new CartLine { Product = product, Quantity = quantityToAdd });
             }
             else
             {
-                line.Quantity += quantity;
+                if (product.Quantity == line.Quantity) return;
+                line.Quantity += quantityToAdd;
             }
+        }
+
+        public int QuantityProductToAdd(int stock, int quantity)
+        {
+            return (stock < quantity) ? stock : quantity;
         }
 
         public void RemoveLine(Product product) => _cartLines.RemoveAll(l => l.Product.Id == product.Id);
 
         public double GetTotalValue()
         {
-            return _cartLines.Any() ? _cartLines.Sum(l => l.Product.Price) : 0;
+            return _cartLines.Any() ? _cartLines.Sum(l => (l.Product.Price) * (l.Quantity)) : 0;
         }
 
         public double GetAverageValue()
         {
-            return _cartLines.Any() ? _cartLines.Average(l => l.Product.Price) : 0;
+            return _cartLines.Any() ? (GetTotalValue() / _cartLines.Sum(l => l.Quantity)) : 0;
         }
 
         public void Clear() => _cartLines.Clear();
