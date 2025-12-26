@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorAdressInvalid" xml:space="preserve">
+    <value>Veuillez entrer une adresse correcte. Caractères autorisés : lettre, chiffre, espace, tiret, apostrophe, virgule. Début et fin de l’adresse : lettre ou chiffre uniquement</value>
+  </data>
+  <data name="ErrorCityInvalid" xml:space="preserve">
+    <value>Veuillez entrer une ville correcte. Caractères autorisés : lettre, espace, tiret, apostrophe. Début et fin de la ville : lettre uniquement</value>
+  </data>
+  <data name="ErrorCountryInvalid" xml:space="preserve">
+    <value>Veuillez entrer un pays correct. Caractères autorisés : lettre, espace, tiret, apostrophe. Début et fin du pays : lettre uniquement</value>
+  </data>
   <data name="ErrorMissingAddress" xml:space="preserve">
     <value>Veuillez renseigner une addresse</value>
   </data>
@@ -131,5 +140,11 @@
   </data>
   <data name="ErrorMissingZipCode" xml:space="preserve">
     <value>Veuillez renseigner le code postal</value>
+  </data>
+  <data name="ErrorNameInvalid" xml:space="preserve">
+    <value>Veuillez entrer un nom correct. Caractères autorisés : lettre, espace, tiret, apostrophe. Début et fin du nom : lettre uniquement</value>
+  </data>
+  <data name="ErrorZipCodeInvalid" xml:space="preserve">
+    <value>Veuillez entrer un code postal correct. Caractère autorisé : chiffre. Doit contenir : 5 chiffres</value>
   </data>
 </root>

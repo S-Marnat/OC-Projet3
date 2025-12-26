@@ -17,6 +17,14 @@ namespace P3.Resources.Models
                 return resourceManager.GetString("ErrorMissingName", resourceCulture);
             }
         }
+        public static string ErrorNameInvalid
+        {
+            get
+            {
+                return resourceManager.GetString("ErrorNameInvalid", resourceCulture);
+            }
+        }
+
         public static string ErrorMissingAddress
         {
             get
@@ -24,6 +32,14 @@ namespace P3.Resources.Models
                 return resourceManager.GetString("ErrorMissingAddress", resourceCulture);
             }
         }
+        public static string ErrorAdressInvalid
+        {
+            get
+            {
+                return resourceManager.GetString("ErrorAdressInvalid", resourceCulture);
+            }
+        }
+
         public static string ErrorMissingCity
         {
             get
@@ -31,6 +47,14 @@ namespace P3.Resources.Models
                 return resourceManager.GetString("ErrorMissingCity", resourceCulture);
             }
         }
+        public static string ErrorCityInvalid
+        {
+            get
+            {
+                return resourceManager.GetString("ErrorCityInvalid", resourceCulture);
+            }
+        }
+
         public static string ErrorMissingZipCode
         {
             get
@@ -38,6 +62,14 @@ namespace P3.Resources.Models
                 return resourceManager.GetString("ErrorMissingZipCode", resourceCulture);
             }
         }
+        public static string ErrorZipCodeInvalid
+        {
+            get
+            {
+                return resourceManager.GetString("ErrorZipCodeInvalid", resourceCulture);
+            }
+        }
+
         public static string ErrorMissingCountry
         {
             get
@@ -45,6 +77,12 @@ namespace P3.Resources.Models
                 return resourceManager.GetString("ErrorMissingCountry", resourceCulture);
             }
         }
+        public static string ErrorCountryInvalid
+        {
+            get
+            {
+                return resourceManager.GetString("ErrorCountryInvalid", resourceCulture);
+            }
+        }
     }
 }
-
