@@ -3,11 +3,11 @@ using System.Resources;
 using System.Reflection;
 using System.Globalization;
 
-namespace P3AddNewFunctionalityDotNetCore.Resources.Models.Services
+namespace P3.Resources.Models
 {
-    public static class ProductService
+    public static class Product
     {
-        private static ResourceManager resourceManager = new ResourceManager("P3.Resources.Models.Services.ProductService", Assembly.GetExecutingAssembly());
+        private static ResourceManager resourceManager = new ResourceManager("P3.Resources.Models.Product", Assembly.GetExecutingAssembly());
         private static CultureInfo resourceCulture;
 
         public static string MissingName

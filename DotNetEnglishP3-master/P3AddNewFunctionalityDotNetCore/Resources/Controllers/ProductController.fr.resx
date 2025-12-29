@@ -117,25 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MissingName" xml:space="preserve">
-    <value>Introduzca un nombre</value>
-  </data>
-  <data name="MissingPrice" xml:space="preserve">
-    <value>Introduzca un precio</value>
-  </data>
-  <data name="MissingStock" xml:space="preserve">
-    <value>Introduzca un valor de stock</value>
-  </data>
-  <data name="PriceNotANumber" xml:space="preserve">
-    <value>El valor introducido para el precio debe ser un número</value>
-  </data>
-  <data name="PriceNotGreaterThanZero" xml:space="preserve">
-    <value>El precio debe ser superior a cero</value>
-  </data>
-  <data name="StockNotAnInteger" xml:space="preserve">
-    <value>El valor introducido para la acción debe ser un entero</value>
-  </data>
-  <data name="StockNotGreaterThanZero" xml:space="preserve">
-    <value>La acción debe ser mayor que cero</value>
+  <data name="ProductAlreadyExists" xml:space="preserve">
+    <value>Un produit portant ce nom existe déjà !</value>
   </data>
 </root>

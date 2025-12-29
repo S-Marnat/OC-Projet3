@@ -70,6 +70,12 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             return products.Find(p => p.Id == id);
         }
 
+        public Product GetProductByName(string name)
+        {
+            List<Product> products = GetAllProducts().ToList();
+            return products.Find(p => p.Name == name);
+        }
+
         public async Task<Product> GetProduct(int id)
         {
             var product = await _productRepository.GetProduct(id);
@@ -88,48 +94,6 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             {
                 _productRepository.UpdateProductStocks(line.Product.Id, line.Quantity);
             }
-        }
-
-        // TODO this is an example method, remove it and perform model validation using data annotations
-        public List<string> CheckProductModelErrors(ProductViewModel product)
-        {
-            List<string> modelErrors = new List<string>();
-            if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
-            {
-                modelErrors.Add(_localizer["MissingName"]);
-            }
-
-            if (product.Price == null || string.IsNullOrWhiteSpace(product.Price))
-            {
-                modelErrors.Add(_localizer["MissingPrice"]);
-            }
-
-            if (!Double.TryParse(product.Price, out double pc))
-            {
-                modelErrors.Add(_localizer["PriceNotANumber"]);
-            }
-            else
-            {
-                if (pc <= 0)
-                    modelErrors.Add(_localizer["PriceNotGreaterThanZero"]);
-            }
-
-            if (product.Stock == null || string.IsNullOrWhiteSpace(product.Stock))
-            {
-                modelErrors.Add(_localizer["MissingQuantity"]);
-            }
-
-            if (!int.TryParse(product.Stock, out int qt))
-            {
-                modelErrors.Add(_localizer["StockNotAnInteger"]);
-            }
-            else
-            {
-                if (qt <= 0)
-                    modelErrors.Add(_localizer["StockNotGreaterThanZero"]);
-            }
-
-            return modelErrors;
         }
 
         public void SaveProduct(ProductViewModel product)

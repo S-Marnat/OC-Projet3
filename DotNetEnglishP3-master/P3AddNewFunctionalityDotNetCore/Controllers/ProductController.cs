@@ -4,6 +4,8 @@ using P3AddNewFunctionalityDotNetCore.Models.Services;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Localization;
+using P3AddNewFunctionalityDotNetCore.Models.Entities;
 
 namespace P3AddNewFunctionalityDotNetCore.Controllers
 {
@@ -11,11 +13,13 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
     {
         private readonly IProductService _productService;
         private readonly ILanguageService _languageService;
+        private readonly IStringLocalizer<ProductController> _localizer;
 
-        public ProductController(IProductService productService, ILanguageService languageService)
+        public ProductController(IProductService productService, ILanguageService languageService, IStringLocalizer<ProductController> localizer)
         {
             _productService = productService;
             _languageService = languageService;
+            _localizer = localizer;
         }
 
         public IActionResult Index()
@@ -40,13 +44,14 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
         [HttpPost]
         public IActionResult Create(ProductViewModel product)
         {
-            List<string> modelErrors = _productService.CheckProductModelErrors(product);           
+            Product products = _productService.GetProductByName(product.Name);
 
-            foreach (string error in modelErrors)
+            if (products != null)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError("", _localizer["ProductAlreadyExists"]);
+                return View(product);
             }
-
+            
             if (ModelState.IsValid)
             {
                 _productService.SaveProduct(product);
