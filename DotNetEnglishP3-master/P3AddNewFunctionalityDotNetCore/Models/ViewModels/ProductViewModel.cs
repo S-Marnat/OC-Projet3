@@ -27,11 +27,11 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
             ErrorMessageResourceName = "MissingStock"
         )]
         [RegularExpression(@"^\d+$",
-        ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
-        ErrorMessageResourceName = "StockNotAnInteger")]
+            ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
+            ErrorMessageResourceName = "StockNotAnInteger")]
         [Range(1, int.MaxValue,
-        ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
-        ErrorMessageResourceName = "StockNotGreaterThanZero")]
+            ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
+            ErrorMessageResourceName = "StockNotGreaterThanZero")]
         public string Stock { get; set; }
 
         [DataType(DataType.Currency)]
@@ -39,13 +39,12 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "MissingPrice"
         )]
-        // A revoir, ne fonctionne pas pour les nombres décimaux
         [RegularExpression(@"^\d+([\.,]\d{1,2})?$",
-        ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
-        ErrorMessageResourceName = "PriceNotANumber")]
-        [Range(0.01, double.MaxValue,
-        ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
-        ErrorMessageResourceName = "PriceNotGreaterThanZero")]
+            ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
+            ErrorMessageResourceName = "PriceNotANumber")]
+        [PriceRangeAttributes(
+            ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
+            ErrorMessageResourceName = "PriceNotGreaterThanZero")]
         public string Price { get; set; }
     }
 }

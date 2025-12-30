@@ -104,15 +104,34 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
         private static Product MapToProductEntity(ProductViewModel product)
         {
+            double priceParsed = ParseDoubleWithAutoDecimalSeparator(product.Price);
+            
             Product productEntity = new Product
             {
                 Name = product.Name,
-                Price = double.Parse(product.Price),
+                Price = priceParsed,
                 Quantity = Int32.Parse(product.Stock),
                 Description = product.Description,
                 Details = product.Details
             };
             return productEntity;
+        }
+
+        private static double ParseDoubleWithAutoDecimalSeparator(string value)
+        {
+            if (value.Contains(","))
+            {
+                value = value.Replace(",", ".");
+                return Double.Parse(value, CultureInfo.InvariantCulture);
+            }
+            if (value.Contains("."))
+            {
+                return Double.Parse(value, CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return Double.Parse(value);
+            }
         }
 
         public void DeleteProduct(int id)
