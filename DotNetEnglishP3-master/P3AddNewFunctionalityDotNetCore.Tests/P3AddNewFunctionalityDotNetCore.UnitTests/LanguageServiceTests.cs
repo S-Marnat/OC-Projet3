@@ -14,6 +14,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         public void SetCulture_GetCultureFrench_ReturnFr()
         {
             // Arrange
+            // On teste ce que le service promet de faire, pas comment il le fait, via l'interface
             ILanguageService languageService = new LanguageService();
             string language = "French";
 
@@ -21,7 +22,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             string culture = languageService.SetCulture(language);
 
             // Assert
-            Assert.Same("fr", culture);
+            Assert.Equal("fr", culture);
         }
 
         [Fact]
@@ -37,8 +38,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             string cultureDefault = languageService.SetCulture(languageDefault);
 
             // Assert
-            Assert.Same("en", culture);
-            Assert.Same("en", cultureDefault);
+            Assert.Equal("en", culture);
+            Assert.Equal("en", cultureDefault);
         }
 
         [Fact]
@@ -52,7 +53,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             string culture = languageService.SetCulture(language);
 
             // Assert
-            Assert.Same("es", culture);
+            Assert.Equal("es", culture);
         }
     }
 }

@@ -131,7 +131,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             double expectedValue = product1.Price * 2 + product2.Price;
 
             // Assert
-            Assert.Equal(expectedValue, totalValue);
+            // Ajout d'une tolérance puisque les types double ne sont jamais précis
+            Assert.Equal(expectedValue, totalValue, 0.001);
         }
 
         [Fact]
@@ -148,7 +149,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             double expectedValue = (product1.Price * 2 + product2.Price) / 3;
 
             // Assert
-            Assert.Equal(expectedValue, averageValue);
+            Assert.Equal(expectedValue, averageValue, 0.001);
         }
     }
 }
