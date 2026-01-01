@@ -8,7 +8,7 @@ public class PriceRangeAttributes : ValidationAttribute
     {
         // Vérification de la présence d'un champ vide
         if (value == null)
-            return new ValidationResult(ErrorMessage);
+            return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
 
         // Initialisation des variables
         string input = value.ToString();
@@ -22,12 +22,12 @@ public class PriceRangeAttributes : ValidationAttribute
         catch
         {
             // Renvoyer une erreur en cas d'échec
-            return new ValidationResult(ErrorMessage);
+            return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
         }
 
         // Vérification du nombre qui doit être supérieur à 0
         if (parsedValue < 0.01)
-            return new ValidationResult(ErrorMessage);
+            return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
 
         return ValidationResult.Success;
     }
