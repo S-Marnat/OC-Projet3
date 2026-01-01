@@ -9,6 +9,8 @@ using Xunit;
 using System.Globalization;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net.WebSockets;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.UnitTests
 {
@@ -70,7 +72,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         }
 
         [Fact]
-        public void GetAllProductsViewModel_GetAllProducts_ReturnListAllProducts()
+        public void GetAllProductsViewModel_GetAllProducts_Return2Products()
         {
             // Arrange
             // Simulation de GetAllProducts()
@@ -84,20 +86,27 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             // Assert
             Assert.NotNull(value);
             Assert.Equal(2, value.Count);
+        }
 
+        [Fact]
+        public void GetAllProductsViewModel_GetAllProducts_ReturnValuesForProduct1()
+        {
+            // Arrange
+            // Simulation de GetAllProducts()
+            _mockProductRepository.Setup(r => r.GetAllProducts())
+                                  .Returns(new List<Product> { product1 });
+
+            // Act
+            // Appel de la méthode à tester
+            var value = _productService.GetAllProductsViewModel();
+
+            // Assert
             Assert.Equal(product1.Id, value[0].Id);
             Assert.Equal(product1.Name, value[0].Name);
             Assert.Equal(product1.Price.ToString(CultureInfo.InvariantCulture), value[0].Price);
             Assert.Equal(product1.Quantity.ToString(), value[0].Stock);
             Assert.Equal(product1.Description, value[0].Description);
             Assert.Equal(product1.Details, value[0].Details);
-
-            Assert.Equal(product2.Id, value[1].Id);
-            Assert.Equal(product2.Name, value[1].Name);
-            Assert.Equal(product2.Price.ToString(CultureInfo.InvariantCulture), value[1].Price);
-            Assert.Equal(product2.Quantity.ToString(), value[1].Stock);
-            Assert.Equal(product2.Description, value[1].Description);
-            Assert.Equal(product2.Details, value[1].Details);
         }
 
         [Fact]
@@ -218,7 +227,21 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         }
 
         [Fact]
-        public void DeleteProduct_DeleteProduct1_CallRomoveLineAndDeleteProductForProduct1()
+        public void DeleteProduct_DeleteProduct1_CallRomoveLineForProduct1()
+        {
+            // Arrange
+            _mockProductRepository.Setup(r => r.GetAllProducts())
+                                  .Returns(new List<Product> { product1, product2 });
+
+            // Act
+            _productService.DeleteProduct(1);
+
+            // Assert
+            _mockCart.Verify(c => c.RemoveLine(product1), Times.Once);
+        }
+
+        [Fact]
+        public void DeleteProduct_DeleteProduct1_CallDeleteProductForProduct1()
         {
             // Arrange
             int id = 1;
@@ -230,7 +253,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             _productService.DeleteProduct(id);
 
             // Assert
-            _mockCart.Verify(c => c.RemoveLine(product1), Times.Once);
             _mockProductRepository.Verify(r => r.DeleteProduct(id), Times.Once);
         }
     }

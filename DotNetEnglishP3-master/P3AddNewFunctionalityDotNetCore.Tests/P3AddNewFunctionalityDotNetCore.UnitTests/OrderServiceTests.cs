@@ -39,9 +39,30 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             );
         }
 
+        // Utilisation d'une méthode factory pour éviter de recréer une commande pour chaque test
+        private OrderViewModel CreateOrderViewModel()
+        {
+            return new OrderViewModel
+            {
+                Lines = new List<CartLine>
+                {
+                    new CartLine
+                    {
+                        Product = new Product { Id = 1 },
+                        Quantity = 2
+                    }
+                },
+                Name = "Mon nom",
+                Address = "Mon adresse",
+                City = "Ma ville",
+                Zip = "12345",
+                Country = "Mon pays"
+            };
+        }
+
         [Fact]
         // Test d'une méthode asynchrone qui renvoie une tâche => public async Task
-        public async Task GetOrder_WhenGetOrderIsCalled_GetOrderCalled1TimeAndReturnOrderId1()
+        public async Task GetOrder_GetOrderWithId1_GetOrderCalled1TimeAndReturnOrderId1()
         {
             // Arrange
             int id = 1;
@@ -63,14 +84,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         }
 
         [Fact]
-        public async Task GetOrders_WhenGetOrdersIsCalled_GetOrdersCalled1TimeReturn2OrdersId1AndId2()
+        public async Task GetOrders_For2Orders_Called1TimeAndReturn2Orders()
         {
             // Arrange
-            int id1 = 1;
-            int id2 = 2;
-
-            var expectedOrder1 = new Order {Id = id1};
-            var expectedOrder2 = new Order {Id = id2};
+            var expectedOrder1 = new Order {Id = 1};
+            var expectedOrder2 = new Order {Id = 2};
 
             _mockOrderRepository.Setup(r => r.GetOrders())
                                 .ReturnsAsync(new List<Order> { expectedOrder1, expectedOrder2 });
@@ -80,38 +98,77 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
 
             // Assert
             _mockOrderRepository.Verify(r => r.GetOrders(), Times.Once);
-
             Assert.Equal(2, returnedOrder.Count);
-
-            // Vérification du contenu de la liste retournée
-            Assert.Contains(expectedOrder1, returnedOrder);
-            Assert.Contains(expectedOrder2, returnedOrder);
         }
 
         [Fact]
-        public void SaveOrder_WhenSaveOrderIsCalled_CallsMapToOrderEntityAndSaveOrderAndUpdateInventory()
+        public async Task GetOrders_For1Order_ReturnExpectedOrder1()
         {
             // Arrange
-            // Création d'un panier
-            var cartLine = new List<CartLine>()
-            {
-                new CartLine
-                {
-                    Product = new Product { Id = 1 },
-                    Quantity = 2
-                }
-            };
+            var expectedOrder1 = new Order {Id = 1};
 
+            _mockOrderRepository.Setup(r => r.GetOrders())
+                                .ReturnsAsync(new List<Order> { expectedOrder1 });
+
+            // Act
+            var returnedOrder = await _orderService.GetOrders();
+
+            // Assert
+            // Vérification du contenu de la liste retournée
+            Assert.Contains(expectedOrder1, returnedOrder);
+        }
+
+        [Fact]
+        public void SaveOrder_Save1Order_Called1TimeAndOrderNotNull()
+        {
+            // Arrange
             // Création d'une commande
-            var order = new OrderViewModel
-            {
-                Lines = cartLine,
-                Name = "Mon nom",
-                Address = "Mon adresse",
-                City = "Ma ville",
-                Zip = "12345",
-                Country = "Mon pays"
-            };
+            var order = CreateOrderViewModel();
+
+            // Récupération de l'Order envoyé au repository
+            Order saveOrder = null;
+
+            _mockOrderRepository.Setup(r => r.Save(It.IsAny<Order>()))
+                                .Callback<Order>(o => saveOrder = o);
+
+            // Act
+            _orderService.SaveOrder(order);
+
+            // Assert
+            _mockOrderRepository.Verify(r => r.Save(It.IsAny<Order>()), Times.Once);
+            Assert.NotNull(saveOrder);
+        }
+
+        [Fact]
+        public void SaveOrder_Save1Order_ReturnMapForValuesForm()
+        {
+            // Arrange
+            // Création d'une commande
+            var order = CreateOrderViewModel();
+
+            // Récupération de l'Order envoyé au repository
+            Order saveOrder = null;
+
+            _mockOrderRepository.Setup(r => r.Save(It.IsAny<Order>()))
+                                .Callback<Order>(o => saveOrder = o);
+
+            // Act
+            _orderService.SaveOrder(order);
+
+            // Assert
+            Assert.Equal("Mon nom", saveOrder.Name);
+            Assert.Equal("Mon adresse", saveOrder.Address);
+            Assert.Equal("Ma ville", saveOrder.City);
+            Assert.Equal("12345", saveOrder.Zip);
+            Assert.Equal("Mon pays", saveOrder.Country);
+        }
+
+        [Fact]
+        public void SaveOrder_Save1Order_ReturnMapForValuesOrder()
+        {
+            // Arrange
+            // Création d'une commande
+            var order = CreateOrderViewModel();
 
             // Récupération de l'Order envoyé au repository
             Order saveOrder = null;
@@ -127,26 +184,48 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             var lines = saveOrder.OrderLine.ToList();
 
             // Assert
-            // Vérification que Save est appelé une seule fois
-            _mockOrderRepository.Verify(r => r.Save(It.IsAny<Order>()), Times.Once);
-
-            // Vérification que l'Order n'est pas vide
-            Assert.NotNull(saveOrder);
-
-            // Vérification que les informations du formulaire sont mappées correctement
-            Assert.Equal("Mon nom", saveOrder.Name);
-            Assert.Equal("Mon adresse", saveOrder.Address);
-            Assert.Equal("Ma ville", saveOrder.City);
-            Assert.Equal("12345", saveOrder.Zip);
-            Assert.Equal("Mon pays", saveOrder.Country);
-
-            // Vérification que les informations de la commande sont mappées correctement
             Assert.Single(saveOrder.OrderLine);
             Assert.Equal(1, lines[0].ProductId);
             Assert.Equal(2, lines[0].Quantity);
+        }
 
-            // Vérification que UpdateProductQuantities et Clear sont bien appelées une seule fois
+        [Fact]
+        public void SaveOrder_Save1Order_CallSaveOrder1Time()
+        {
+            // Arrange
+            // Création d'une commande
+            var order = CreateOrderViewModel();
+
+            // Récupération de l'Order envoyé au repository
+            Order saveOrder = null;
+
+            _mockOrderRepository.Setup(r => r.Save(It.IsAny<Order>()))
+                                .Callback<Order>(o => saveOrder = o);
+
+            // Act
+            _orderService.SaveOrder(order);
+
+            // Assert
             _mockProductService.Verify(r => r.UpdateProductQuantities(), Times.Once);
+        }
+
+        [Fact]
+        public void SaveOrder_Save1Order_CallUpdateInventory1Time()
+        {
+            // Arrange
+            // Création d'une commande
+            var order = CreateOrderViewModel();
+
+            // Récupération de l'Order envoyé au repository
+            Order saveOrder = null;
+
+            _mockOrderRepository.Setup(r => r.Save(It.IsAny<Order>()))
+                                .Callback<Order>(o => saveOrder = o);
+
+            // Act
+            _orderService.SaveOrder(order);
+
+            // Assert
             _mockCart.Verify(r => r.Clear(), Times.Once);
         }
     }
