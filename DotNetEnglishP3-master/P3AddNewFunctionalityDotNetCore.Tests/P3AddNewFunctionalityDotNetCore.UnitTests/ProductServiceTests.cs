@@ -11,6 +11,7 @@ using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net.WebSockets;
+using NuGet.ContentModel;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.UnitTests
 {
@@ -23,7 +24,8 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         /// </summary>
 
         // Utilisation d'un constructeur pour éviter de recréer des services avec les mocks pour chaque test
-        
+
+        // Champs privés
         private readonly Mock<ICart> _mockCart;
         private readonly Mock<IProductRepository> _mockProductRepository;
         private readonly Mock<IOrderRepository> _mockOrderRepository;
@@ -34,6 +36,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         private readonly Product product1;
         private readonly Product product2;
 
+        // Constructeur
         public ProductServiceTests()
         {
             // Initialisation des mocks
@@ -71,6 +74,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             };
         }
 
+        // Tests unitaires
         [Fact]
         public void GetAllProductsViewModel_GetAllProducts_Return2Products()
         {
@@ -193,6 +197,166 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
                                                Times.Once);
             _mockProductRepository.Verify(r => r.UpdateProductStocks(product2.Id, 3),
                                                Times.Once);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_ValidProduct_ReturnNoError()
+        {
+            // Arrange
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "10",
+                Stock = "5"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_ValidProductWithPriceDecimalPoint_ReturnNoError()
+        {
+            // Arrange
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "10.50",
+                Stock = "5"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_ValidProductWithPriceDecimalVirgule_ReturnNoError()
+        {
+            // Arrange
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "10,50",
+                Stock = "5"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Empty(results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_MissingData_ReturnErrorsForNamePriceAndStock()
+        {
+            // Arrange
+            CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+            var product = new ProductViewModel
+            {
+                Name = "",
+                Price = "",
+                Stock = ""
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Equal(3, results.Count);
+            Assert.Contains("Veuillez saisir un nom", results);
+            Assert.Contains("Veuillez saisir un prix", results);
+            Assert.Contains("Veuillez saisir un stock", results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_PriceAndStockNotANumber_ReturnErrorForPriceAndStock()
+        {
+            // Arrange
+            CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "abc",
+                Stock = "abc"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Equal(2, results.Count);
+            Assert.Contains("La valeur saisie pour le prix doit être un nombre, avec au maximum 2 décimales", results);
+            Assert.Contains("La valeur saisie pour le stock doit être un entier", results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_PriceAndStockWithDecimals_ReturnErrorForPriceAndStock()
+        {
+            // Arrange
+            CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "10.555",
+                Stock = "5.5"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Equal(2, results.Count);
+            Assert.Contains("La valeur saisie pour le prix doit être un nombre, avec au maximum 2 décimales", results);
+            Assert.Contains("La valeur saisie pour le stock doit être un entier", results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_PriceAndStockEqualZero_ReturnErrorForPriceAndStock()
+        {
+            // Arrange
+            CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "0",
+                Stock = "0"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Equal(2, results.Count);
+            Assert.Contains("Le prix doit être supérieur à zéro", results);
+            Assert.Contains("Le stock doit être supérieur à zéro", results);
+        }
+
+        [Fact]
+        public void CheckProductModelErrors_PriceAndStockNegative_ReturnErrorForPriceAndStock()
+        {
+            // Arrange
+            CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+            var product = new ProductViewModel
+            {
+                Name = "Produit 1",
+                Price = "-10",
+                Stock = "-5"
+            };
+
+            // Act
+            var results = _productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Equal(2, results.Count);
+            Assert.Contains("Le prix doit être supérieur à zéro", results);
+            Assert.Contains("Le stock doit être supérieur à zéro", results);
         }
 
         [Fact]

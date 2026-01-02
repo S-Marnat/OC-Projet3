@@ -136,6 +136,19 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         }
 
         [Fact]
+        public void GetTotalValue_WithEmptyCart_Return0()
+        {
+            // Arrange
+            var cart = new Cart();
+
+            // Act
+            double totalValue = cart.GetTotalValue();
+
+            // Assert
+            Assert.Equal(0, totalValue);
+        }
+
+        [Fact]
         public void GetAverageValue_CalculateAverageValue_ExpectedAverageValueEqualAverageValue()
         {
             // Arrange
@@ -150,6 +163,35 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
 
             // Assert
             Assert.Equal(expectedValue, averageValue, 0.001);
+        }
+
+        [Fact]
+        public void GetAverageValue_WithEmptyCart_Return0()
+        {
+            // Arrange
+            var cart = new Cart();
+
+            // Act
+            double averageValue = cart.GetAverageValue();
+
+            // Assert
+            Assert.Equal(0, averageValue);
+        }
+
+        [Fact]
+        public void Clear_ClearTheCart_EmptyCart()
+        {
+            // Arrange
+            var cart = new Cart();
+
+            cart.AddItem(product1, 2);
+            cart.AddItem(product2, 1);
+
+            // Act
+            cart.Clear();
+
+            // Assert
+            Assert.Equal(0, cart.GetTotalValue());
         }
     }
 }
