@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace P3AddNewFunctionalityDotNetCore.Models.Services
 {
@@ -94,6 +95,29 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
             {
                 _productRepository.UpdateProductStocks(line.Product.Id, line.Quantity);
             }
+        }
+
+        public List<string> CheckProductModelErrors(ProductViewModel product)
+        {
+            // Création d'une liste pour les messages d'erreur
+            List<string> modelErrors = new List<string>();
+
+            // Création d'une liste temporaire pour les résultats de la validation
+            List<ValidationResult> modelValidations = new List<ValidationResult>();
+
+            // Création d'un contexte de validation (quel objet, quel environnement, quels services) 
+            var context = new ValidationContext(product, null, null);
+
+            // Validation de l'objet selon ses DataAnnotations et placement des erreurs dans validationResults
+            Validator.TryValidateObject(product, context, modelValidations, true);
+
+            // Ajout des messages d'erreur pour chaque résultat de la validation
+            foreach (var result in modelValidations)
+            {
+                modelErrors.Add(result.ErrorMessage);
+            }
+
+            return modelErrors;
         }
 
         public void SaveProduct(ProductViewModel product)

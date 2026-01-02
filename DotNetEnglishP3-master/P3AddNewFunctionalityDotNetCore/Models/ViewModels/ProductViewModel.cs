@@ -26,10 +26,10 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "MissingStock"
         )]
-        [RegularExpression(@"^\d+$",
+        [RegularExpression(@"^(-)?\d+$",
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "StockNotAnInteger")]
-        [Range(1, int.MaxValue,
+        [PositiveNumber(
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "StockNotGreaterThanZero")]
         public string Stock { get; set; }
@@ -39,10 +39,10 @@ namespace P3AddNewFunctionalityDotNetCore.Models.ViewModels
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "MissingPrice"
         )]
-        [RegularExpression(@"^\d+([\.,]\d{1,2})?$",
+        [RegularExpression(@"^(-)?\d+([\.,]\d{1,2})?$",
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "PriceNotANumber")]
-        [PriceRangeAttributes(
+        [PositiveNumber(
             ErrorMessageResourceType = typeof(P3.Resources.Models.Product),
             ErrorMessageResourceName = "PriceNotGreaterThanZero")]
         public string Price { get; set; }
