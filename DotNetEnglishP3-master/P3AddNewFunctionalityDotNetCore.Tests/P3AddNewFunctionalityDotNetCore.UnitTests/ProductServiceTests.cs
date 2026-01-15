@@ -9,23 +9,11 @@ using Xunit;
 using System.Globalization;
 using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Net.WebSockets;
-using NuGet.ContentModel;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.UnitTests
 {
     public class ProductServiceTests
     {
-        /// <summary>
-        /// Take this test method as a template to write your test method.
-        /// A test method must check if a definite method does its job:
-        /// returns an expected value from a particular set of parameters
-        /// </summary>
-
-        // Utilisation d'un constructeur pour éviter de recréer des services avec les mocks pour chaque test
-
-        // Champs privés
         private readonly Mock<ICart> _mockCart;
         private readonly Mock<IProductRepository> _mockProductRepository;
         private readonly Mock<IOrderRepository> _mockOrderRepository;
@@ -36,16 +24,13 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         private readonly Product product1;
         private readonly Product product2;
 
-        // Constructeur
         public ProductServiceTests()
         {
-            // Initialisation des mocks
             _mockCart = new Mock<ICart>();
             _mockProductRepository = new Mock<IProductRepository>();
             _mockOrderRepository = new Mock<IOrderRepository>();
             _mockLocalizer = new Mock<IStringLocalizer<ProductService>>();
 
-            // Création du service avec les mocks
             _productService = new ProductService(
                 _mockCart.Object,
                 _mockProductRepository.Object,
@@ -53,7 +38,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
                 _mockLocalizer.Object
             );
 
-            // Initialisation des produits
             product1 = new Product
             {
                 Id = 1,
@@ -74,17 +58,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             };
         }
 
-        // Tests unitaires
         [Fact]
         public void GetAllProductsViewModel_GetAllProducts_Return2Products()
         {
             // Arrange
-            // Simulation de GetAllProducts()
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2});
+                .Returns(new List<Product> { product1, product2});
 
             // Act
-            // Appel de la méthode à tester
             var value = _productService.GetAllProductsViewModel();
 
             // Assert
@@ -96,12 +77,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         public void GetAllProductsViewModel_GetAllProducts_ReturnValuesForProduct1()
         {
             // Arrange
-            // Simulation de GetAllProducts()
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1 });
+                .Returns(new List<Product> { product1 });
 
             // Act
-            // Appel de la méthode à tester
             var value = _productService.GetAllProductsViewModel();
 
             // Assert
@@ -118,7 +97,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         {
             // Arrange
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2});
+                .Returns(new List<Product> { product1, product2});
             
             // Act
             var value = _productService.GetProductByIdViewModel(1);
@@ -133,7 +112,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         {
             // Arrange
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2 });
+                .Returns(new List<Product> { product1, product2 });
 
             // Act
             var value = _productService.GetProductByIdViewModel(10);
@@ -147,7 +126,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         {
             // Arrange
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2});
+                .Returns(new List<Product> { product1, product2});
             
             // Act
             var value = _productService.GetProductByName("Le produit 1");
@@ -162,7 +141,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         {
             // Arrange
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2 });
+                .Returns(new List<Product> { product1, product2 });
 
             // Act
             var value = _productService.GetProductByName("Le produit 10");
@@ -175,12 +154,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         public void UpdateProductQuantities_CartProduct1Quantity2Product2Quantity3_UptdateStocksProduct1Quantity2Product2Quantity3()
         {
             // Arrange
-            // Nécessite l'utilisation d'un vrai panier
             var cart = new Cart();
             cart.AddItem(product1, 2);
             cart.AddItem(product2, 3);
 
-            // Création d'un nouveau service utilisant ce panier, et non l'interface
             var newProductService = new ProductService(
                 cart,
                 _mockProductRepository.Object,
@@ -192,11 +169,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             newProductService.UpdateProductQuantities();
 
             // Assert
-            // Vérification que la méthode est bien appelée, avec les bons paramètres et le bon nombre de fois
             _mockProductRepository.Verify(r => r.UpdateProductStocks(product1.Id, 2),
-                                               Times.Once);
+                Times.Once);
             _mockProductRepository.Verify(r => r.UpdateProductStocks(product2.Id, 3),
-                                               Times.Once);
+                Times.Once);
         }
 
         [Fact]
@@ -363,7 +339,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         public void SaveProduct_SaveProduct3_Product3Mapped()
         {
             // Arrange
-            // Création d'un produit provenant du formulaire
             var product3 = new ProductViewModel
             {
                 Name = "Le produit 3",
@@ -377,11 +352,9 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             _productService.SaveProduct(product3);
 
             // Assert
-            // On vérifie que le produit passé en paramètre est correctement mappé
             _mockProductRepository.Verify(r => r.SaveProduct(
                 It.Is<Product>(p =>
                     p.Name == "Le produit 3" &&
-                    // Ajout d'une tolérance puisque les types double ne sont jamais précis
                     Math.Abs(p.Price - 29.99) < 0.0001 &&
                     p.Quantity == 30 &&
                     p.Description == "La description du produit 3" &&
@@ -395,13 +368,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
         {
             // Arrange
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2 });
+                .Returns(new List<Product> { product1, product2 });
 
             // Act
             _productService.DeleteProduct(1);
 
             // Assert
-            _mockCart.Verify(c => c.RemoveLine(product1), Times.Once);
+            _mockCart.Verify(c => c.RemoveLine(product1),
+                Times.Once);
         }
 
         [Fact]
@@ -411,13 +385,14 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             int id = 1;
 
             _mockProductRepository.Setup(r => r.GetAllProducts())
-                                  .Returns(new List<Product> { product1, product2 });
+                .Returns(new List<Product> { product1, product2 });
 
             // Act
             _productService.DeleteProduct(id);
 
             // Assert
-            _mockProductRepository.Verify(r => r.DeleteProduct(id), Times.Once);
+            _mockProductRepository.Verify(r => r.DeleteProduct(id),
+                Times.Once);
         }
     }
 }

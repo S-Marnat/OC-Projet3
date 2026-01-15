@@ -99,19 +99,14 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
 
         public List<string> CheckProductModelErrors(ProductViewModel product)
         {
-            // Création d'une liste pour les messages d'erreur
             List<string> modelErrors = new List<string>();
 
-            // Création d'une liste temporaire pour les résultats de la validation
             List<ValidationResult> modelValidations = new List<ValidationResult>();
 
-            // Création d'un contexte de validation (quel objet, quel environnement, quels services) 
             var context = new ValidationContext(product, null, null);
 
-            // Validation de l'objet selon ses DataAnnotations et placement des erreurs dans validationResults
             Validator.TryValidateObject(product, context, modelValidations, true);
 
-            // Ajout des messages d'erreur pour chaque résultat de la validation
             foreach (var result in modelValidations)
             {
                 modelErrors.Add(result.ErrorMessage);

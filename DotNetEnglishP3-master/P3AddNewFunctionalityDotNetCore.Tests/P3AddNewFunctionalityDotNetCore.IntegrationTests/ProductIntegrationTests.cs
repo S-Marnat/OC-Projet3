@@ -115,8 +115,8 @@ public class ProductIntegrationTests
             if (product != null)
             {
                 var productHereAgain = await context.Product
-                .Where(p => p.Name == "Le produit a supprimer")
-                .FirstOrDefaultAsync();
+                    .Where(p => p.Name == "Le produit a supprimer")
+                    .FirstOrDefaultAsync();
 
                 if (productHereAgain != null)
                     await CleanTestData(context, product);
@@ -135,10 +135,13 @@ public class ProductIntegrationTests
 
     private async Task CleanTestData(P3Referential context, Product product)
     {
-        var lines = context.OrderLine.Where(ol => ol.ProductId == product.Id);
+        var lines = context.OrderLine
+            .Where(ol => ol.ProductId == product.Id);
         context.OrderLine.RemoveRange(lines);
 
-        var emptyOrders = context.Order.Where(o => !context.OrderLine.Any(ol => ol.OrderId == o.Id));
+        var emptyOrders = context.Order
+            .Where(o => !context.OrderLine
+            .Any(ol => ol.OrderId == o.Id));
         context.Order.RemoveRange(emptyOrders);
 
         context.Product.Remove(product);

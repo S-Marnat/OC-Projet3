@@ -1,12 +1,6 @@
 ﻿using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Entities;
-using P3AddNewFunctionalityDotNetCore.Models.Repositories;
-using P3AddNewFunctionalityDotNetCore.Models.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.UnitTests
@@ -131,7 +125,6 @@ namespace P3AddNewFunctionalityDotNetCore.Tests.P3AddNewFunctionalityDotNetCore.
             double expectedValue = product1.Price * 2 + product2.Price;
 
             // Assert
-            // Ajout d'une tolérance puisque les types double ne sont jamais précis
             Assert.Equal(expectedValue, totalValue, 0.001);
         }
 

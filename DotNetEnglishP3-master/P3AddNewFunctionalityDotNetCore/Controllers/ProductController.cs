@@ -44,7 +44,6 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
         [HttpPost]
         public IActionResult Create(ProductViewModel product)
         {
-            // Vérification que le produit n'existe pas déjà dans l'inventaire
             Product products = _productService.GetProductByName(product.Name);
 
             if (products != null)
@@ -53,7 +52,6 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
                 return View(product);
             }
 
-            // Vérification des erreurs dans les champs
             if (ModelState.IsValid)
             {
                 _productService.SaveProduct(product);

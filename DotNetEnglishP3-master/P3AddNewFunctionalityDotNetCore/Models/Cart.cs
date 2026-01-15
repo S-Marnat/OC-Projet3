@@ -15,7 +15,8 @@ namespace P3AddNewFunctionalityDotNetCore.Models
 
         public void AddItem(Product product, int quantity)
         {
-            if (product.Quantity == 0) return;
+            if (product == null || product.Quantity == 0)
+                return;
 
             CartLine line = _cartLines.FirstOrDefault(p => p.Product.Id == product.Id);
             int quantityToAdd = QuantityProductToAdd(product.Quantity, quantity);
@@ -26,7 +27,8 @@ namespace P3AddNewFunctionalityDotNetCore.Models
             }
             else
             {
-                if (product.Quantity == line.Quantity) return;
+                if (product.Quantity == line.Quantity)
+                    return;
                 line.Quantity += quantityToAdd;
             }
         }
